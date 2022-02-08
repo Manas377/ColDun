@@ -1,0 +1,4 @@
+django==4.0.2
+pandas
+palettable==3.3.0
+numpy==1.22.2

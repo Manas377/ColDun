@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 
 def data_summary(request):
+    
     context = {
         
     }
