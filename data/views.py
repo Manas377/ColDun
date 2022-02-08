@@ -7,4 +7,4 @@ def data_summary(request):
     context = {
         
     }
-    return render(request, 'data-summary.html', context=context)
+    return render(request, 'data/data-summary.html', context=context)
