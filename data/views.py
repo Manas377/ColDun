@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from .utility.utility import csv2db
 
@@ -16,18 +17,16 @@ PALETTE = ['#465b65', '#184c9c', '#d33035', '#ffc107', '#28a745', '#6f7f8c', '#6
 
 
 
-def data_summary(request):
-    
-    context = {
-        
-    }
-    return render(request, 'data/data-summary.html', context=context)
+def load_data(request):
+    html = "<html><body>DATA LOADED !!!.</body></html>"
+    csv2db()
+    return HttpResponse(html)
 
 class DataSummary(TemplateView):
     
     def get_context_data(self, **kwargs):       
         context = super().get_context_data(**kwargs)
-        df = objects_to_df(Purchase, date_cols=['%Y-%m', 'date'], city='Mandalay')
+        df = objects_to_df(Purchase, date_cols=['%Y-%m', 'date'])
         context['charts'] = []
         city_payment_radar = Chart('radar', chart_id='city_payment_radar', palette=PALETTE)
         city_payment_radar.from_df(df, values='total', stacks=['payment'], labels=['city'])

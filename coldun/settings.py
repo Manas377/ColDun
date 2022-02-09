@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     
     # Custom Apps
     'data',
-    'user'
+    'user',
+    'companydata'
 ]
 
 MIDDLEWARE = [
