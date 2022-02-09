@@ -5,42 +5,63 @@
         <div class="row mb-4 mt-4">
             <div class="col"
                 <div class="card-deck">
-                    <h1> Dashboard</h1>
+                    <h2> Dashboard</h2>
+                    
+                    <hr>
 
-                    {% for chart in charts %}
-                        
+                    <div class="mt-5">
                     <div class="btn-group">
                         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Country
+                          Filter by: <small>Country</small></button>
                         </button>
                         <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">USA</a>
-                          <a class="dropdown-item" href="#">China</a>
-                          <a class="dropdown-item" href="#">Australia</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?country=United States">United States</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?country=China">China</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?country=Australia">Australia</a>
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">Separated link</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}">All Countries</a>
                         </div>
                       </div>
+                     
+                     
+                     
+                     <div class="btn-group">
+                        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Filter by: <small>Market-Cap</small></button>
+                        </button>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?mcap=0-100">0 - 100B</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?mcap=100-250">100 - 250B</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?mcap=250-500">250 - 500B</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?mcap=500-1500">500 - 1500B</a>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}?mcap=1500-3000">1500 - 3000B</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="{% url 'companydata:summary' %}">Reset</a>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {% for chart in charts %}
+                    {% if country %}
+                     <h4 class="mt-5"> Graph Showing "Country-Wise" Distribution of Top 6000 Companies</h4>
 
+                     {% elif mcap %}
+                     <h4 class="mt-5"> Graph Showing "Country-Wise" Distribution of Top 6000 Companies</h4>
+                     {% else %}
+                            {% if forloop.first %}
+                            <h4 class="mt-5"> Graph Showing "Country-Wise" Distribution of Top 6000 Companies</h4>
+                            {% else %}
+                            <h4 class="mt-5"> Graph Showing "Country-Wise" Distribution of Top 6000 Companies</h4>
+                            {% endif %}
+                     {% endif %}
                         <div class="card">
                             <div class="card-body">
                                 <div class="chart-container" style="height:150; width:150">
+
                                     {{ chart.html|safe }}
                                 </div>
                             </div>
                         </div>
-                        {% if forloop.counter|divisibleby:2 %}
-                            <div class="w-100 d-none d-sm-block d-md-none mb-4"><!-- wrap every 2 on sm--></div>
-                        {% endif %}
-                        {% if forloop.counter|divisibleby:3 %}
-                            <div class="w-100 d-none d-md-block d-lg-none mb-4"><!-- wrap every 3 on md--></div>
-                        {% endif %}
-                        {% if forloop.counter|divisibleby:4 %}
-                            <div class="w-100 d-none d-lg-block d-xl-none mb-4"><!-- wrap every 4 on lg--></div>
-                        {% endif %}
-                        {% if forloop.counter|divisibleby:5 %}
-                            <div class="w-100 d-none d-xl-block mb-4"><!-- wrap every 5 on xl--></div>
-                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

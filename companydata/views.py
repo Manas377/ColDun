@@ -27,27 +27,58 @@ class DataSummary(TemplateView):
     def get_context_data(self, **kwargs):
                
         context = super().get_context_data(**kwargs)
-        
-        
-        df = pd.read_csv('data-set/6000_Largest_Companies_ranked_by_Market_Cap.csv') 
-        df['marketcaprange'] = pd.cut(df['marketcap'], [0,50000000000, 250000000000, 500000000000, 1000000000000, 3000000000000], labels=['>50B','50-250B','250-500B', '500-1000B', '1000-3000B'])
-        df.sort_values(['marketcaprange','marketcap'], ascending=[True, True], inplace=True)
-        
-        print(df)
-        
         context['charts'] = []
-
-        exp_polar = Chart('polarArea', chart_id='polar01', palette=PALETTE)
-        exp_polar.from_df(df, values='marketcap', labels=['marketcaprange'])
-        context['charts'].append(exp_polar.get_presentation())
+        df = pd.read_csv('data-set/6000_Largest_Companies_ranked_by_Market_Cap.csv') 
         
-        unique_countries = df['country'].nunique()
+        country = self.request.GET.get('country')
+        mcap = self.request.GET.get('mcap')
+        
+        print(country)
+       
+        
+        if country:
+            
+            df = df[df['country'] == country] 
+            print(df)
+            df['marketcaprange'] = pd.cut(df['marketcap'], [0,50000000000, 250000000000, 500000000000, 1000000000000, 3000000000000], labels=['>50B','50-250B','250-500B', '500-1000B', '1000-3000B'])
+            df.sort_values(['marketcaprange','marketcap'], ascending=[True, True], inplace=True)
+            exp_polar = Chart('polarArea', chart_id='polar01', palette=PALETTE)
+            exp_polar.from_df(df, values='marketcap', labels=['marketcaprange'])
+            context['charts'].append(exp_polar.get_presentation())
+            context['heading'] = "Graph Showing \"Market-Cap-Wise\" Distribution of Top 6000 Companies"
+            context['country'] = True
+        elif mcap:
+            mcap = mcap.split('-')
+            Bill = 1000000000
+            print(mcap)
+            df = df[(df['marketcap'] > int(mcap[0])*Bill) & (df['marketcap'] < int(mcap[1])*Bill)] 
+            print(df)
+            unique_countries = df['country'].nunique()
 
-        exp_doughnut = Chart('doughnut', chart_id='doughnut01', palette=get_random_colors(unique_countries))
-        exp_doughnut.from_df(df, values='marketcap', labels=['country'])
-        context['charts'].append(exp_doughnut.get_presentation())
+            exp_doughnut = Chart('doughnut', chart_id='doughnut01', palette=get_random_colors(unique_countries))
+            exp_doughnut.from_df(df, values='marketcap', labels=['country'])
+            context['charts'].append(exp_doughnut.get_presentation())
+            context['heading'] = "Graph Showing \"Country-Wise\" Distribution of Top 6000 Companies"
+            context['mcap'] = True
+            
+            
+        else:
+            
+            df['marketcaprange'] = pd.cut(df['marketcap'], [0,50000000000, 250000000000, 500000000000, 1000000000000, 3000000000000], labels=['>50B','50-250B','250-500B', '500-1000B', '1000-3000B'])
+            df.sort_values(['marketcaprange','marketcap'], ascending=[True, True], inplace=True)
+            exp_polar = Chart('polarArea', chart_id='polar01', palette=PALETTE)
+            exp_polar.from_df(df, values='marketcap', labels=['marketcaprange'])
+            context['charts'].append(exp_polar.get_presentation())
+            
+            unique_countries = df['country'].nunique()
+
+            exp_doughnut = Chart('doughnut', chart_id='doughnut01', palette=get_random_colors(unique_countries))
+            exp_doughnut.from_df(df, values='marketcap', labels=['country'])
+            context['charts'].append(exp_doughnut.get_presentation())
         
 
         return context
+    
+
     
 
