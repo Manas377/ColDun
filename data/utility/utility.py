@@ -1,8 +1,10 @@
 import pandas as pd
 from ..models import Purchase
+from datetime import datetime
 
 def csv2db():
     df = pd.read_csv('data-set/supermarket_sales.csv') # use pandas to read the csv
+    
     records = df.to_records()  # convert to records
 
     # loop through and create a purchase object using django
